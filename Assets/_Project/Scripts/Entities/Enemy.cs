@@ -1,3 +1,4 @@
+using _Project.Scripts.Data;
 using UnityEngine;
 
 namespace _Project.Scripts.Entities
@@ -6,16 +7,22 @@ namespace _Project.Scripts.Entities
     {
         private const float EnemyY = 0.5f;
 
-        [SerializeField] private int _health;
-        [SerializeField] private float _speed;
-
+        private EnemyData _data;
+        private int _health;
         private int _row;
         private int _column;
 
         public int Row => _row;
         public int Column => _column;
-        public float Speed => _speed;
+        public float Speed => _data.Speed;
         public bool IsAlive => _health > 0;
+
+        public void SetData(EnemyData data)
+        {
+            _data = data;
+            _health = data.Health;
+            Instantiate(data.VisualPrefab, transform);
+        }
 
         public void SetCell(int row, int column)
         {

@@ -1,4 +1,5 @@
 using System.Collections;
+using _Project.Scripts.Data;
 using _Project.Scripts.Entities;
 using _Project.Scripts.Events;
 using GenericEventBus;
@@ -13,8 +14,6 @@ namespace _Project.Scripts.Systems
         private const int SpawnRow = 7;
 
         [SerializeField] private Enemy _enemyPrefab;
-        [SerializeField] private int _spawnCount = 5;
-        [SerializeField] private float _spawnInterval = 1f;
 
         private IBoard _board;
         private EnemySystem _enemySystem;
@@ -23,37 +22,39 @@ namespace _Project.Scripts.Systems
         [Inject]
         public void Construct(IBoard board, EnemySystem enemySystem, GenericEventBus<IGameEvent> eventBus)
         {
-            Debug.Log("constructed");
             _board = board;
             _enemySystem = enemySystem;
             _eventBus = eventBus;
-            _eventBus.SubscribeTo<GameStartedEvent>(OnGameStarted);
+            _eventBus.SubscribeTo<LevelStartedEvent>(OnLevelStarted);
         }
 
         private void OnDestroy()
         {
-            _eventBus.UnsubscribeFrom<GameStartedEvent>(OnGameStarted);
+            _eventBus.UnsubscribeFrom<LevelStartedEvent>(OnLevelStarted);
         }
 
-        private void OnGameStarted(ref GameStartedEvent gameStartedEvent)
+        private void OnLevelStarted(ref LevelStartedEvent levelStartedEvent)
         {
-            Debug.Log("start");
-            StartCoroutine(SpawnRoutine());
+            StartCoroutine(SpawnRoutine(levelStartedEvent.Level));
         }
 
-        private IEnumerator SpawnRoutine()
+        private IEnumerator SpawnRoutine(LevelData level)
         {
-            for (int i = 0; i < _spawnCount; i++)
+            foreach (EnemySpawnEntry entry in level.Enemies)
             {
-                Spawn();
-                yield return new WaitForSeconds(_spawnInterval);
+                for (int i = 0; i < entry.Count; i++)
+                {
+                    Spawn(entry.EnemyData);
+                    yield return new WaitForSeconds(level.SpawnInterval);
+                }
             }
         }
 
-        private void Spawn()
+        private void Spawn(EnemyData data)
         {
             int column = Random.Range(0, Columns);
             Enemy enemy = Instantiate(_enemyPrefab);
+            enemy.SetData(data);
             enemy.SetCell(SpawnRow, column);
             enemy.SetPosition(_board.GetCenter(SpawnRow, column));
             _enemySystem.Register(enemy);

@@ -644,6 +644,7 @@ MonoBehaviour:
   autoRun: 1
   autoInjectGameObjects: []
   _gridPrefab: {fileID: 7644957435120964923, guid: 4e6aee092bfcfdb4e8b1a720165c9147, type: 3}
+  _levelConfig: {fileID: 11400000, guid: 4964b61d133297943b92ece09953be72, type: 2}
 --- !u!4 &710217521
 Transform:
   m_ObjectHideFlags: 0
@@ -1073,8 +1074,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Systems.EnemySpawner
   _enemyPrefab: {fileID: 2417542073375094882, guid: 983d9a9e5658de041b8ac28344e788d4, type: 3}
-  _spawnCount: 5
-  _spawnInterval: 1
 --- !u!4 &1586015459
 Transform:
   m_ObjectHideFlags: 0
