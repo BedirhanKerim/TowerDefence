@@ -1,4 +1,4 @@
-namespace BoardDefence.Events
+namespace _Project.Scripts.Events
 {
     public interface IGameEvent
     {
