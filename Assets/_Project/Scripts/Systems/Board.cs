@@ -1,3 +1,6 @@
+using _Project.Scripts.Entities;
+using _Project.Scripts.Events;
+using GenericEventBus;
 using UnityEngine;
 
 namespace _Project.Scripts.Systems
@@ -12,8 +15,11 @@ namespace _Project.Scripts.Systems
 
         private readonly Vector2[,] _cellCenters = new Vector2[Rows, Columns];
 
-        public Board(GameObject gridPrefab)
+        private readonly GenericEventBus<IGameEvent> _eventBus;
+
+        public Board(GameObject gridPrefab, GenericEventBus<IGameEvent> eventBus)
         {
+            _eventBus = eventBus;
             CreateGrid(gridPrefab);
         }
 
@@ -31,7 +37,11 @@ namespace _Project.Scripts.Systems
                     float x = column * Spacing;
                     float z = row * Spacing;
                     _cellCenters[row, column] = new Vector2(x, z);
-                    Object.Instantiate(gridPrefab, new Vector3(x, CellY, z), Quaternion.identity);
+                    GameObject cell= Object.Instantiate(gridPrefab, new Vector3(x, CellY, z), Quaternion.identity);
+                    if (row<PlacementStartRow)
+                    {
+                        cell.GetComponent<GridPlane>().SetCell(_eventBus, row, column);
+                    }
                 }
             }
         }
