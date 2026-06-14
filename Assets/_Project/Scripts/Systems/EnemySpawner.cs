@@ -18,6 +18,7 @@ namespace _Project.Scripts.Systems
         private IBoard _board;
         private EnemySystem _enemySystem;
         private GenericEventBus<IGameEvent> _eventBus;
+        private LevelData _currentLevel;
 
         [Inject]
         public void Construct(IBoard board, EnemySystem enemySystem, GenericEventBus<IGameEvent> eventBus)
@@ -25,17 +26,27 @@ namespace _Project.Scripts.Systems
             _board = board;
             _enemySystem = enemySystem;
             _eventBus = eventBus;
-            _eventBus.SubscribeTo<LevelStartedEvent>(OnLevelStarted);
+            _eventBus.SubscribeTo<LevelLoadedEvent>(OnLevelLoaded);
+            _eventBus.SubscribeTo<GameStartedEvent>(OnGameStarted);
         }
 
         private void OnDestroy()
         {
-            _eventBus.UnsubscribeFrom<LevelStartedEvent>(OnLevelStarted);
+            _eventBus.UnsubscribeFrom<LevelLoadedEvent>(OnLevelLoaded);
+            _eventBus.UnsubscribeFrom<GameStartedEvent>(OnGameStarted);
         }
 
-        private void OnLevelStarted(ref LevelStartedEvent levelStartedEvent)
+        private void OnLevelLoaded(ref LevelLoadedEvent levelLoadedEvent)
         {
-            StartCoroutine(SpawnRoutine(levelStartedEvent.Level));
+            _currentLevel = levelLoadedEvent.Level;
+        }
+
+        private void OnGameStarted(ref GameStartedEvent gameStartedEvent)
+        {
+            if (_currentLevel == null)
+                return;
+
+            StartCoroutine(SpawnRoutine(_currentLevel));
         }
 
         private IEnumerator SpawnRoutine(LevelData level)

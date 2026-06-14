@@ -21,24 +21,28 @@ namespace _Project.Scripts.Systems
 
         public void Start()
         {
-            _eventBus.SubscribeTo<GameStartedEvent>(OnGameStarted);
             _eventBus.SubscribeTo<LevelCompletedEvent>(OnLevelCompleted);
+            BroadcastCurrentLevel();
         }
 
         public void Dispose()
         {
-            _eventBus.UnsubscribeFrom<GameStartedEvent>(OnGameStarted);
-        }
-
-        private void OnGameStarted(ref GameStartedEvent gameStartedEvent)
-        {
-            LevelData level = _levelConfig.Levels[_currentLevelIndex];
-            _eventBus.Raise(new LevelStartedEvent(level));
+            _eventBus.UnsubscribeFrom<LevelCompletedEvent>(OnLevelCompleted);
         }
 
         private void OnLevelCompleted(ref LevelCompletedEvent levelCompletedEvent)
         {
             _currentLevelIndex++;
+            BroadcastCurrentLevel();
+        }
+
+        private void BroadcastCurrentLevel()
+        {
+            if (_currentLevelIndex >= _levelConfig.Levels.Length)
+                return;
+
+            LevelData level = _levelConfig.Levels[_currentLevelIndex];
+            _eventBus.Raise(new LevelLoadedEvent(level));
         }
         
     }

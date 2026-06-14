@@ -22,5 +22,8 @@ public class GameLifetimeScope : LifetimeScope
         builder.RegisterEntryPoint<LevelManager>();
         builder.RegisterComponentInHierarchy<EnemySpawner>();
         builder.RegisterComponentInHierarchy<UIManager>();
+        builder.RegisterComponentInHierarchy<TowerPlacementSystem>();
+        builder.RegisterComponentInHierarchy<TowerToolbar>();
+
     }
 }

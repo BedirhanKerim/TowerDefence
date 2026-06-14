@@ -59,6 +59,7 @@ namespace _Project.Scripts.Systems
             _enemies.RemoveAt(index);
             _stepTimers.Remove(enemy);
             Object.Destroy(enemy.gameObject);
+            // level fail
         }
     }
 }

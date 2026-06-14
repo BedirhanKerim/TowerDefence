@@ -20,3 +20,10 @@ MonoBehaviour:
   - _enemyData: {fileID: 11400000, guid: 0dc6755e5f67d8b4ba8e98cbc49a56cf, type: 2}
     _count: 3
   _spawnInterval: 1
+  _towers:
+  - _towerData: {fileID: 11400000, guid: d64bb61c2600b4149b0c360969a0be5f, type: 2}
+    _count: 3
+  - _towerData: {fileID: 11400000, guid: bebe3f697b6ab5d4187d9cd0dd90a9d3, type: 2}
+    _count: 4
+  - _towerData: {fileID: 11400000, guid: 0374e7e80b2f5314ab4a4a07ca714805, type: 2}
+    _count: 2

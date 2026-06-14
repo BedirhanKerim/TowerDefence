@@ -2,11 +2,11 @@ using _Project.Scripts.Data;
 
 namespace _Project.Scripts.Events
 {
-    public readonly struct LevelStartedEvent : IGameEvent
+    public readonly struct LevelLoadedEvent : IGameEvent
     {
         public readonly LevelData Level;
 
-        public LevelStartedEvent(LevelData level)
+        public LevelLoadedEvent(LevelData level)
         {
             Level = level;
         }
