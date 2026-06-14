@@ -1,6 +1,7 @@
 using _Project.Scripts.Data;
 using _Project.Scripts.Events;
 using _Project.Scripts.Systems;
+using _Project.Scripts.UI;
 using GenericEventBus;
 using UnityEngine;
 using VContainer;
@@ -19,5 +20,7 @@ public class GameLifetimeScope : LifetimeScope
         builder.Register<IBoard, Board>(Lifetime.Singleton);
         builder.RegisterEntryPoint<EnemySystem>().AsSelf();
         builder.RegisterEntryPoint<LevelManager>();
+        builder.RegisterComponentInHierarchy<EnemySpawner>();
+        builder.RegisterComponentInHierarchy<UIManager>();
     }
 }
