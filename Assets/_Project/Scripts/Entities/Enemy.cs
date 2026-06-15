@@ -13,6 +13,7 @@ namespace _Project.Scripts.Entities
         private const float EnemyY = 0.5f;
 
         [SerializeField] private float _moveDuration = 0.15f;
+        [SerializeField] private HealthBar _healthBar;
 
         private EnemyData _data;
         private GenericEventBus<IGameEvent> _eventBus;
@@ -36,6 +37,7 @@ namespace _Project.Scripts.Entities
             _eventBus = eventBus;
             _health = data.Health;
             _visualInstance = LeanPool.Spawn(data.VisualPrefab, transform);
+            _healthBar.SetFill(1f);
         }
 
         public void SetCell(int row, int column)
@@ -60,6 +62,7 @@ namespace _Project.Scripts.Entities
         {
             _health -= amount;
             _eventBus.Raise(new DamageDealtEvent(transform.position, amount));
+            _healthBar.SetFill((float)_health / _data.Health);
         }
 
         public void OnSpawn()
