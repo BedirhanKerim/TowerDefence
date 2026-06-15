@@ -33,6 +33,7 @@ namespace _Project.Scripts.UI
             _startButton.onClick.AddListener(OnStartClicked);
             _winNextButton.onClick.AddListener(OnReloadClicked);
             _failReplayButton.onClick.AddListener(OnReloadClicked);
+            _startPanel.SetActive(true);
         }
 
         private void OnDestroy()
