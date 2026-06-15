@@ -40,7 +40,8 @@ namespace _Project.Scripts.Systems
                 if (!enemy.IsAlive)
                 {
                     _eventBus.Raise(new EnemyDiedEvent());
-                    Remove(enemy, i);
+                    RemoveTracking(enemy, i);
+                    enemy.Die();
                     continue;
                 }
 
@@ -62,7 +63,8 @@ namespace _Project.Scripts.Systems
             if (toRow < BaseRow)
             {
                 _eventBus.Raise(new EnemyReachedBaseEvent());
-                Remove(enemy, index);
+                RemoveTracking(enemy, index);
+                LeanPool.Despawn(enemy.gameObject);
                 return;
             }
 
@@ -70,11 +72,10 @@ namespace _Project.Scripts.Systems
             enemy.MoveTo(_board.GetCenter(toRow, column));
         }
 
-        private void Remove(Enemy enemy, int index)
+        private void RemoveTracking(Enemy enemy, int index)
         {
             _enemies.RemoveAt(index);
             _stepTimers.Remove(enemy);
-            LeanPool.Despawn(enemy.gameObject);
         }
     }
 }

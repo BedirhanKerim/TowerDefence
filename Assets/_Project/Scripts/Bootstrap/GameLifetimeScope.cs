@@ -30,6 +30,7 @@ public class GameLifetimeScope : LifetimeScope
         builder.RegisterComponentInHierarchy<TowerPlacementSystem>();
         builder.RegisterComponentInHierarchy<TowerToolbar>();
         builder.RegisterComponentInHierarchy<DamagePopupSystem>();
+        builder.RegisterComponentInHierarchy<HitParticleSystem>();
 
     }
 }

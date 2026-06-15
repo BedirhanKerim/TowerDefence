@@ -13,11 +13,13 @@ namespace _Project.Scripts.Entities
         private const float EnemyY = 0.5f;
 
         [SerializeField] private float _moveDuration = 0.15f;
+        [SerializeField] private float _deathDuration = 0.2f;
         [SerializeField] private HealthBar _healthBar;
 
         private EnemyData _data;
         private GenericEventBus<IGameEvent> _eventBus;
         private Tween _moveTween;
+        private Vector3 _baseScale;
         private GameObject _visualInstance;
         private int _health;
         private int _row;
@@ -30,6 +32,11 @@ namespace _Project.Scripts.Entities
         public Vector3 Position => transform.position;
 
         public event Action Destroyed;
+
+        private void Awake()
+        {
+            _baseScale = transform.localScale;
+        }
 
         public void SetData(EnemyData data, GenericEventBus<IGameEvent> eventBus)
         {
@@ -65,8 +72,19 @@ namespace _Project.Scripts.Entities
             _healthBar.SetFill((float)_health / _data.Health);
         }
 
+        public void Die()
+        {
+            _moveTween?.Kill();
+            Destroyed?.Invoke();
+            Destroyed = null;
+            transform.DOScale(Vector3.zero, _deathDuration)
+                .SetEase(Ease.InBack)
+                .OnComplete(() => LeanPool.Despawn(gameObject));
+        }
+
         public void OnSpawn()
         {
+            transform.localScale = _baseScale;
         }
 
         public void OnDespawn()
