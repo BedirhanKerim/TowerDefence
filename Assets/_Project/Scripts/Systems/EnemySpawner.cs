@@ -66,7 +66,7 @@ namespace _Project.Scripts.Systems
         {
             int column = Random.Range(0, Columns);
             Enemy enemy = LeanPool.Spawn(_enemyPrefab);
-            enemy.SetData(data);
+            enemy.SetData(data, _eventBus);
             enemy.SetCell(SpawnRow, column);
             enemy.SetPosition(_board.GetCenter(SpawnRow, column));
             _enemySystem.Register(enemy);

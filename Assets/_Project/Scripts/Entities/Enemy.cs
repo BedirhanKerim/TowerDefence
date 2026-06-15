@@ -1,5 +1,7 @@
 using System;
 using _Project.Scripts.Data;
+using _Project.Scripts.Events;
+using GenericEventBus;
 using Lean.Pool;
 using UnityEngine;
 
@@ -10,6 +12,7 @@ namespace _Project.Scripts.Entities
         private const float EnemyY = 0.5f;
 
         private EnemyData _data;
+        private GenericEventBus<IGameEvent> _eventBus;
         private GameObject _visualInstance;
         private int _health;
         private int _row;
@@ -23,9 +26,10 @@ namespace _Project.Scripts.Entities
 
         public event Action Destroyed;
 
-        public void SetData(EnemyData data)
+        public void SetData(EnemyData data, GenericEventBus<IGameEvent> eventBus)
         {
             _data = data;
+            _eventBus = eventBus;
             _health = data.Health;
             _visualInstance = LeanPool.Spawn(data.VisualPrefab, transform);
         }
@@ -44,6 +48,7 @@ namespace _Project.Scripts.Entities
         public void TakeDamage(int amount)
         {
             _health -= amount;
+            _eventBus.Raise(new DamageDealtEvent(transform.position, amount));
         }
 
         public void OnSpawn()
