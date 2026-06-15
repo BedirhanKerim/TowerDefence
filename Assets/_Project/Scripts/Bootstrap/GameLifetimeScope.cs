@@ -1,5 +1,6 @@
 using _Project.Scripts.Data;
 using _Project.Scripts.Events;
+using _Project.Scripts.Services;
 using _Project.Scripts.Systems;
 using _Project.Scripts.UI;
 using GenericEventBus;
@@ -18,8 +19,11 @@ public class GameLifetimeScope : LifetimeScope
         builder.RegisterInstance(_gridPrefab);
         builder.RegisterInstance(_levelConfig);
         builder.Register<IBoard, Board>(Lifetime.Singleton);
+        builder.Register<ISaveService, JsonSaveService>(Lifetime.Singleton);
+        builder.Register<ISceneLoader, SceneLoader>(Lifetime.Singleton);
         builder.RegisterEntryPoint<EnemySystem>().AsSelf();
         builder.RegisterEntryPoint<TowerSystem>().AsSelf();
+        builder.RegisterEntryPoint<WinLoseSystem>();
         builder.RegisterEntryPoint<LevelManager>();
         builder.RegisterComponentInHierarchy<EnemySpawner>();
         builder.RegisterComponentInHierarchy<UIManager>();

@@ -1,6 +1,7 @@
 using System;
 using _Project.Scripts.Data;
 using _Project.Scripts.Events;
+using _Project.Scripts.Services;
 using GenericEventBus;
 using VContainer.Unity;
 
@@ -10,40 +11,42 @@ namespace _Project.Scripts.Systems
     {
         private readonly LevelConfig _levelConfig;
         private readonly GenericEventBus<IGameEvent> _eventBus;
+        private readonly ISaveService _saveService;
 
         private int _currentLevelIndex;
 
-        public LevelManager(LevelConfig levelConfig, GenericEventBus<IGameEvent> eventBus)
+        public LevelManager(LevelConfig levelConfig, GenericEventBus<IGameEvent> eventBus, ISaveService saveService)
         {
             _levelConfig = levelConfig;
             _eventBus = eventBus;
+            _saveService = saveService;
         }
 
         public void Start()
         {
-            _eventBus.SubscribeTo<LevelCompletedEvent>(OnLevelCompleted);
+            _currentLevelIndex = _saveService.Load().CurrentLevelIndex;
+            if (_currentLevelIndex < 0 || _currentLevelIndex >= _levelConfig.Levels.Length)
+                _currentLevelIndex = 0;
+
+            _eventBus.SubscribeTo<GameWonEvent>(OnGameWon);
             BroadcastCurrentLevel();
         }
 
         public void Dispose()
         {
-            _eventBus.UnsubscribeFrom<LevelCompletedEvent>(OnLevelCompleted);
+            _eventBus.UnsubscribeFrom<GameWonEvent>(OnGameWon);
         }
 
-        private void OnLevelCompleted(ref LevelCompletedEvent levelCompletedEvent)
+        private void OnGameWon(ref GameWonEvent gameWonEvent)
         {
             _currentLevelIndex++;
-            BroadcastCurrentLevel();
+            _saveService.Save(new SaveData { CurrentLevelIndex = _currentLevelIndex });
         }
 
         private void BroadcastCurrentLevel()
         {
-            if (_currentLevelIndex >= _levelConfig.Levels.Length)
-                return;
-
             LevelData level = _levelConfig.Levels[_currentLevelIndex];
-            _eventBus.Raise(new LevelLoadedEvent(level));
+            _eventBus.Raise(new LevelLoadedEvent(level, _currentLevelIndex + 1));
         }
-        
     }
 }

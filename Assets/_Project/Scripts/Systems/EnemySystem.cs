@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using _Project.Scripts.Entities;
+using _Project.Scripts.Events;
+using GenericEventBus;
 using Lean.Pool;
 using UnityEngine;
 using VContainer.Unity;
@@ -11,14 +13,16 @@ namespace _Project.Scripts.Systems
         private const int BaseRow = 0;
 
         private readonly IBoard _board;
+        private readonly GenericEventBus<IGameEvent> _eventBus;
         private readonly List<Enemy> _enemies = new List<Enemy>();
         private readonly Dictionary<Enemy, float> _stepTimers = new Dictionary<Enemy, float>();
 
         public IReadOnlyList<Enemy> Enemies => _enemies;
 
-        public EnemySystem(IBoard board)
+        public EnemySystem(IBoard board, GenericEventBus<IGameEvent> eventBus)
         {
             _board = board;
+            _eventBus = eventBus;
         }
 
         public void Register(Enemy enemy)
@@ -35,6 +39,7 @@ namespace _Project.Scripts.Systems
 
                 if (!enemy.IsAlive)
                 {
+                    _eventBus.Raise(new EnemyDiedEvent());
                     Remove(enemy, i);
                     continue;
                 }
@@ -56,6 +61,7 @@ namespace _Project.Scripts.Systems
 
             if (toRow < BaseRow)
             {
+                _eventBus.Raise(new EnemyReachedBaseEvent());
                 Remove(enemy, index);
                 return;
             }

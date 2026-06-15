@@ -28,6 +28,7 @@ namespace _Project.Scripts.UI
         }
 
         [SerializeField] private ToolbarButton[] _buttons;
+        [SerializeField] private TextMeshProUGUI _levelText;
 
         private GenericEventBus<IGameEvent> _eventBus;
 
@@ -58,6 +59,8 @@ namespace _Project.Scripts.UI
 // level datası geldiginde tipler ile ilgili dataları toolbarda setliyorum
         private void OnLevelLoaded(ref LevelLoadedEvent levelLoadedEvent)
         {
+            _levelText.text = $"Level {levelLoadedEvent.LevelNumber}";
+
             foreach (TowerSpawnEntry entry in levelLoadedEvent.Level.Towers)
             {
                 SetCount(entry.TowerData.Type, entry.Count);
