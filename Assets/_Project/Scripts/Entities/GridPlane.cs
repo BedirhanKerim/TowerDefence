@@ -20,12 +20,37 @@ namespace _Project.Scripts.Entities
             _column = column;
             GetComponent<Collider>().enabled = true;
             _cellAvailableMark.SetActive(true);
+            _eventBus.SubscribeTo<TowerPlacedEvent>(OnTowerPlacedEvent);
+            _eventBus.SubscribeTo<GameStartedEvent>(OnGameStarted);
+        }
+
+        private void OnDestroy()
+        {
+            if (_eventBus != null)
+            {
+                _eventBus.UnsubscribeFrom<TowerPlacedEvent>(OnTowerPlacedEvent);
+                _eventBus.UnsubscribeFrom<GameStartedEvent>(OnGameStarted);
+            }
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
             _eventBus.Raise(new CellClickedEvent(_row, _column));
-            Debug.Log("gridtıklama!11!!"+_row+","+_column);
+            Debug.Log("gridtıklama!!   "+_row+","+_column);
+        }
+
+        private void OnTowerPlacedEvent(ref TowerPlacedEvent towerPlacedEvent)
+        {
+            if (towerPlacedEvent.Coordinates == new Vector2Int(_row, _column))
+            {
+                _cellAvailableMark.SetActive(false);
+
+            }
+        }
+
+        private void OnGameStarted(ref GameStartedEvent gameStartedEvent)
+        {
+            _cellAvailableMark.SetActive(false);
         }
     }
 }

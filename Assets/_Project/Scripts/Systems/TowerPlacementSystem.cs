@@ -79,7 +79,7 @@ namespace _Project.Scripts.Systems
 
             int remaining = count - 1;
             _remaining[_selectedType] = remaining;
-            _eventBus.Raise(new TowerPlacedEvent(_selectedType, remaining));
+            _eventBus.Raise(new TowerPlacedEvent(_selectedType, remaining, new Vector2Int(cell.Item1, cell.Item2)));
         }
 
         private void PlaceTower(int row, int column)
