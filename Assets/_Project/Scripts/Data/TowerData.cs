@@ -1,5 +1,6 @@
 using _Project.Scripts.Entities;
 using _Project.Scripts.Enums;
+using _Project.Scripts.Targeting;
 using UnityEngine;
 
 namespace _Project.Scripts.Data
@@ -11,7 +12,7 @@ namespace _Project.Scripts.Data
         [SerializeField] private int _damage;
         [SerializeField] private int _range;
         [SerializeField] private float _interval;
-        [SerializeField] private TowerDirection _direction;
+        [SerializeField] private TargetingStrategy _targetingStrategy;
         [SerializeField] private GameObject _visualPrefab;
         
         [SerializeField] private Bullet _projectilePrefab;
@@ -20,7 +21,7 @@ namespace _Project.Scripts.Data
         public int Damage => _damage;
         public int Range => _range;
         public float Interval => _interval;
-        public TowerDirection Direction => _direction;
+        public TargetingStrategy TargetingStrategy => _targetingStrategy;
         public GameObject VisualPrefab => _visualPrefab;
         public Bullet ProjectilePrefab => _projectilePrefab;
     }
