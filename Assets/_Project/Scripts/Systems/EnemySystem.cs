@@ -67,7 +67,7 @@ namespace _Project.Scripts.Systems
             }
 
             enemy.SetCell(toRow, column);
-            enemy.SetPosition(_board.GetCenter(toRow, column));
+            enemy.MoveTo(_board.GetCenter(toRow, column));
         }
 
         private void Remove(Enemy enemy, int index)

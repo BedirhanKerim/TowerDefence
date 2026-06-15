@@ -1,6 +1,7 @@
 using System;
 using _Project.Scripts.Data;
 using _Project.Scripts.Events;
+using DG.Tweening;
 using GenericEventBus;
 using Lean.Pool;
 using UnityEngine;
@@ -11,8 +12,11 @@ namespace _Project.Scripts.Entities
     {
         private const float EnemyY = 0.5f;
 
+        [SerializeField] private float _moveDuration = 0.15f;
+
         private EnemyData _data;
         private GenericEventBus<IGameEvent> _eventBus;
+        private Tween _moveTween;
         private GameObject _visualInstance;
         private int _health;
         private int _row;
@@ -45,6 +49,13 @@ namespace _Project.Scripts.Entities
             transform.position = new Vector3(center.x, EnemyY, center.y);
         }
 
+        public void MoveTo(Vector2 center)
+        {
+            _moveTween?.Kill();
+            Vector3 target = new Vector3(center.x, EnemyY, center.y);
+            _moveTween = transform.DOMove(target, _moveDuration).SetEase(Ease.Linear);
+        }
+
         public void TakeDamage(int amount)
         {
             _health -= amount;
@@ -57,6 +68,7 @@ namespace _Project.Scripts.Entities
 
         public void OnDespawn()
         {
+            _moveTween?.Kill();
             Destroyed?.Invoke();
             Destroyed = null;
 
