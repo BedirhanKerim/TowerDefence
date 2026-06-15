@@ -19,6 +19,7 @@ public class GameLifetimeScope : LifetimeScope
         builder.RegisterInstance(_levelConfig);
         builder.Register<IBoard, Board>(Lifetime.Singleton);
         builder.RegisterEntryPoint<EnemySystem>().AsSelf();
+        builder.RegisterEntryPoint<TowerSystem>().AsSelf();
         builder.RegisterEntryPoint<LevelManager>();
         builder.RegisterComponentInHierarchy<EnemySpawner>();
         builder.RegisterComponentInHierarchy<UIManager>();

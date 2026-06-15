@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using _Project.Scripts.Entities;
+using Lean.Pool;
 using UnityEngine;
 using VContainer.Unity;
 
@@ -12,6 +13,8 @@ namespace _Project.Scripts.Systems
         private readonly IBoard _board;
         private readonly List<Enemy> _enemies = new List<Enemy>();
         private readonly Dictionary<Enemy, float> _stepTimers = new Dictionary<Enemy, float>();
+
+        public IReadOnlyList<Enemy> Enemies => _enemies;
 
         public EnemySystem(IBoard board)
         {
@@ -29,6 +32,13 @@ namespace _Project.Scripts.Systems
             for (int i = _enemies.Count - 1; i >= 0; i--)
             {
                 Enemy enemy = _enemies[i];
+
+                if (!enemy.IsAlive)
+                {
+                    Remove(enemy, i);
+                    continue;
+                }
+
                 _stepTimers[enemy] += Time.deltaTime;
 
                 if (_stepTimers[enemy] < 1f / enemy.Speed)
@@ -46,7 +56,7 @@ namespace _Project.Scripts.Systems
 
             if (toRow < BaseRow)
             {
-                ReachBase(enemy, index);
+                Remove(enemy, index);
                 return;
             }
 
@@ -54,12 +64,11 @@ namespace _Project.Scripts.Systems
             enemy.SetPosition(_board.GetCenter(toRow, column));
         }
 
-        private void ReachBase(Enemy enemy, int index)
+        private void Remove(Enemy enemy, int index)
         {
             _enemies.RemoveAt(index);
             _stepTimers.Remove(enemy);
-            Object.Destroy(enemy.gameObject);
-            // level fail
+            LeanPool.Despawn(enemy.gameObject);
         }
     }
 }

@@ -3,6 +3,7 @@ using _Project.Scripts.Data;
 using _Project.Scripts.Entities;
 using _Project.Scripts.Events;
 using GenericEventBus;
+using Lean.Pool;
 using UnityEngine;
 using VContainer;
 
@@ -64,7 +65,7 @@ namespace _Project.Scripts.Systems
         private void Spawn(EnemyData data)
         {
             int column = Random.Range(0, Columns);
-            Enemy enemy = Instantiate(_enemyPrefab);
+            Enemy enemy = LeanPool.Spawn(_enemyPrefab);
             enemy.SetData(data);
             enemy.SetCell(SpawnRow, column);
             enemy.SetPosition(_board.GetCenter(SpawnRow, column));

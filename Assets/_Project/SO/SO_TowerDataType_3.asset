@@ -18,3 +18,4 @@ MonoBehaviour:
   _interval: 5
   _direction: 1
   _visualPrefab: {fileID: 1067323313397025543, guid: 57d5e923d401ee9428c39c74a1bb2204, type: 3}
+  _projectilePrefab: {fileID: -8658619783786345619, guid: 95a41cdf258dbf14b9fa1809ce46f248, type: 3}

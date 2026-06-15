@@ -14,7 +14,7 @@ namespace _Project.Scripts.Data
         [SerializeField] private TowerDirection _direction;
         [SerializeField] private GameObject _visualPrefab;
         
-      //  [SerializeField] private Bullet _projectilePrefab;
+        [SerializeField] private Bullet _projectilePrefab;
 
         public TowerType Type => _type;
         public int Damage => _damage;
@@ -22,6 +22,6 @@ namespace _Project.Scripts.Data
         public float Interval => _interval;
         public TowerDirection Direction => _direction;
         public GameObject VisualPrefab => _visualPrefab;
-      //  public Bullet ProjectilePrefab => _projectilePrefab;
+        public Bullet ProjectilePrefab => _projectilePrefab;
     }
 }

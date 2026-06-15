@@ -4,6 +4,7 @@ using _Project.Scripts.Entities;
 using _Project.Scripts.Enums;
 using _Project.Scripts.Events;
 using GenericEventBus;
+using Lean.Pool;
 using UnityEngine;
 using VContainer;
 
@@ -14,6 +15,7 @@ namespace _Project.Scripts.Systems
         [SerializeField] private Tower _towerPrefab;
 
         private IBoard _board;
+        private TowerSystem _towerSystem;
         private GenericEventBus<IGameEvent> _eventBus;
 
         private bool _hasSelection;
@@ -23,9 +25,10 @@ namespace _Project.Scripts.Systems
         private readonly HashSet<(int, int)> _occupied = new HashSet<(int, int)>();
 
         [Inject]
-        public void Construct(IBoard board, GenericEventBus<IGameEvent> eventBus)
+        public void Construct(IBoard board, TowerSystem towerSystem, GenericEventBus<IGameEvent> eventBus)
         {
             _board = board;
+            _towerSystem = towerSystem;
             _eventBus = eventBus;
             _eventBus.SubscribeTo<LevelLoadedEvent>(OnLevelLoaded);
             _eventBus.SubscribeTo<TowerTypeSelectedEvent>(OnTowerTypeSelected);
@@ -82,10 +85,11 @@ namespace _Project.Scripts.Systems
         private void PlaceTower(int row, int column)
         {
             TowerData data = _dataByType[_selectedType];
-            Tower tower = Instantiate(_towerPrefab);
+            Tower tower = LeanPool.Spawn(_towerPrefab);
             tower.SetData(data);
             tower.SetCell(row, column);
             tower.SetPosition(_board.GetCenter(row, column));
+            _towerSystem.Register(tower);
         }
     }
 }
