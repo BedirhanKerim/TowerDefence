@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44e80491c04315b44ad53bcc68602b38, type: 3}
   m_Name: SO_EnemyDataType_3
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Data.EnemyData
-  _type: 0
+  _type: 2
   _health: 5
   _speed: 0.5
   _visualPrefab: {fileID: 3142596083450740360, guid: ad0f916db5add44458c6aca436d4df1c, type: 3}
